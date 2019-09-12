@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace = "noticeboardmapper">
+	
+	<resultMap type="com.semi.noticeboard.dto.noticeboarddto" id="dtoMap">
+		<result column = "ROW_NUM" property = "row_num" />
+		<result column = "NOTICEBOARD_NO" property = "noticeboard_no" />
+		<result column = "NOTICEBOARD_ID" property = "noticeboard_id" />
+		<result column = "NOTICEBOARD_TITLE" property = "noticeboard_title" />
+		<result column = "NOTICEBOARD_CONTENT" property = "noticeboard_content" />
+		<result column = "NOTICEBOARD_REGDATE" property = "noticeboard_regdate" />
+		<result column = "NOTICEBOARD_CLICK_COUNT" property = "noticeboard_click_count" />
+	</resultMap>
+	
+	<select id="selectlist" resultType = "com.semi.noticeboard.dto.noticeboarddto">
+		SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY NOTICEBOARD_NO) ROW_NO, NOTICEBOARD.* FROM NOTICEBOARD);
+	</select>
+	
+	<insert id="write" parameterType = "noticeboarddto">
+		INSERT INTO NOTICEBOARD VALUES(NOTICEBOARDSEQ.NEXTVAL,#{noticeboard_id},#{noticeboard_title},#{noticeboard_content},SYSDATE,0)
+	</insert>
+	
+	<update id="clickcount" parameterType = "map">
+		UPDATE NOTICEBOARD SET NOTICEBOARD_CLICK_COUNT = (SELECT (NOTICEBOARD_CLICK_COUNT)+1 FROM NOTICEBOARD WHERE NOTICEBOARD_NO = ${noticeboard_no }) WHERE NOTICEBOARD_NO = ${noticeboard_no }
+	</update>
+
+	<select id="selectone" parameterType = "map" resultType = "com.semi.noticeboard.dto.noticeboarddto">
+		SELECT * FROM NOTICEBOARD WHERE NOTICEBOARD_NO = #{noticeboard_no }
+	</select>
+	
+	<select id="pagelist" parameterType = "map" resultType = "com.semi.noticeboard.dto.noticeboarddto">
+		SELECT * 
+		FROM (SELECT * 
+			FROM ( SELECT ROWNUM as row_num, NOTICEBOARD.* 
+				FROM (SELECT * FROM NOTICEBOARD ORDER BY NOTICEBOARD_REGDATE) NOTICEBOARD )
+		<![CDATA[
+			WHERE row_num >= #{startNum} ) 
+		WHERE row_num <= #{endNum}]]> 
+		ORDER BY ROW_NUM DESC
+	</select>
+	
+	<select id="pagecount" resultType = "int">
+		SELECT COUNT(*) AS COUNT FROM NOTICEBOARD
+	</select>
+</mapper>

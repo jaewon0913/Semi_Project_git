@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace = "freeboardmapper">
+	
+	<resultMap type="com.semi.freeboard.dto.freeboarddto" id="dtoMap">
+		<result column = "FREEBOARD_NO" property = "freeboard_no" />
+		<result column = "FREEBOARD_ID" property = "freeboard_id" />
+		<result column = "FREEBOARD_TITLE" property = "freeboard_title" />
+		<result column = "FREEBOARD_CONTENT" property = "freeboard_content" />
+		<result column = "FREEBOARD_REGDATE" property = "freeboard_regdate" />
+		<result column = "FREEBOARD_GROUPNO" property = "freeboard_groupno" />
+		<result column = "FREEBOARD_grouporder" property = "freeboard_grouporder" />
+		<result column = "FREEBOARD_TITLETAB" property = "freeboard_titletabl" />
+		<result column = "FREEBOARD_DELENABLED" property = "freeboard_delenabled" />
+	</resultMap>
+	
+	<select id="selectlist" resultType = "com.semi.freeboard.dto.freeboarddto">
+		SELECT * FROM FREEBOARD ORDER BY FREEBOARD_NO DESC
+	</select>
+	
+	<insert id="write" parameterType = "freeboarddto">
+		INSERT INTO FREEBOARD VALUES(FREEBOARDSEQ.NEXTVAL,#{freeboard_id},#{freeboard_title},#{freeboard_content},SYSDATE,1,1,0,'Y')
+	</insert>
+
+	<select id="selectone" parameterType = "map" resultType = "com.semi.freeboard.dto.freeboarddto">
+		SELECT * FROM FREEBOARD WHERE FREEBOARD_NO = #{freeboardno}
+	</select>
+	
+	<select id="pagelist" parameterType = "map" resultType = "com.semi.freeboard.dto.freeboarddto">
+		SELECT * 
+		FROM (SELECT * 
+			FROM ( SELECT ROWNUM as row_num, FREEBOARD.* 
+				FROM FREEBOARD )
+		<![CDATA[
+			WHERE row_num >= #{startNum} ) 
+		WHERE row_num <= #{endNum}]]> 
+		ORDER BY FREEBOARD_NO DESC
+	</select>
+	
+	<select id="pagecount" resultType = "int">
+		SELECT COUNT(*) as count FROM FREEBOARD
+	</select>
+</mapper>

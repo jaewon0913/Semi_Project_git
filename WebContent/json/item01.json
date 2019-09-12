@@ -1,0 +1,26 @@
+{
+"DESCRIPTION" :{"NO":"번호","DAY":"DAY","CITY":"도시이름","PLACE":"장소"},
+"DATA" : [
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY1","CITY":"Seoul","PLACE":"Start"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY1","CITY":"Jeonju","PLACE":"Jeonju_Hanok_Village,Jeondong_Catholic_Cathedral,Gyeonggijeon_Shrine"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY2","CITY":"Gunsan","PLACE":"Modern_History_Museum,Dongguk_Temple,Saemangeum_seawall"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY2","CITY":"Buan","PLACE":"Naesosa_Temple"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY2","CITY":"Mokpo","PLACE":"Gugak_performance"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY3","CITY":"Boseong","PLACE":"Boseong_Green_Tea_Field"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY3","CITY":"Suncheon","PLACE":"Suncheonman"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY3","CITY":"Yeosu","PLACE":"Aqua Planet"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY4","CITY":"Yeosu","PLACE":"Odongdo"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY4","CITY":"Jinju","PLACE":"Jinjuseong,Chokseongnu"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY4","CITY":"Ulsan","PLACE":"Bamboo Forest"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY5","CITY":"Ulsan","PLACE":"Jangsaengpo_Whale_Watching_Cruise,Ulsan_Bridge_Observatory"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY5","CITY":"Gyeongju","PLACE":"Bulguksa_Temple,Donggungwon,Gyeongju_National_Museum"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY5","CITY":"Daegu","PLACE":"rest"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY6","CITY":"Uiseong","PLACE":"Geumseongsan_Tombs "},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY6","CITY":"Andong","PLACE":"Andong_Hahoe_Folk_Village,Dosanseowon"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY6","CITY":"Jeongseon","PLACE":"rest"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY7","CITY":"Jeongseon","PLACE":"Samtan_Art_Mine,Jeongamsa"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY7","CITY":"Yeongwol","PLACE":"Jangneung_Royal_Tomb"},
+{"NO":"ITEMSEQ01.NEXTVAL","DAY":"DAY7","CITY":"Seoul","PLACE":"End"}
+]
+}
+

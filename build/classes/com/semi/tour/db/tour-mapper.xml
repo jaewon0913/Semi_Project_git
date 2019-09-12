@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tour">
+
+<select id="selectList" resultType="com.semi.tour.dto.itemDto">
+	SELECT * FROM ITEM01 WHERE ITEM_DAY=#{day} ORDER BY ITEM_NO
+</select>
+
+<select id="selectone" resultType="com.semi.tour.dto.placeDto" parameterType="String">
+	
+	SELECT * FROM PLACE WHERE PLACE_NAME LIKE '%'|| #{query} ||'%'
+	
+</select>
+
+<insert id="insertPayment" parameterType="com.semi.tour.dto.paymentDto">
+	INSERT INTO PAYMENT VALUES (#{payment_id}, #{payment_subject}, #{payment_amount}, #{payment_price}, #{payment_mdate} , SYSDATE)
+
+</insert>
+
+<select id="selectListpayment" parameterType="String" resultType="com.semi.tour.dto.paymentDto">
+	SELECT * FROM PAYMENT WHERE PAYMENT_ID=#{payment_id}
+</select>
+
+
+</mapper>

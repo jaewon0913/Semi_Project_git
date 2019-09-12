@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace = "membermapper">
+	
+	<resultMap type="com.semi.member.dto.memberdto" id="dtoMap">
+		<result column = "MEMBER_ID" property = "member_id" />
+		<result column = "MEMBER_PW" property = "member_pw" />
+		<result column = "MEMBER_NAME" property = "member_name" />
+		<result column = "MEMBER_PHONE" property = "member_phone" />
+		<result column = "MEMBER_EMAIL" property = "member_email" />
+		<result column = "MEMBER_GENDER" property = "member_gender" />
+		<result column = "MEMBER_BIRTH" property = "member_birth" />
+		<result column = "MEMBER_LEVEL" property = "member_level" />
+		<result column = "MEMBER_ENABLED" property = "member_enabled" />
+		<result column = "MEMBER_STYLE" property = "member_style" />
+	</resultMap>
+	
+	<select id="idchk" resultMap="dtoMap">
+		SELECT * FROM MEMBER WHERE MEMBER_ID = #{member_id} 
+	</select>
+
+	<insert id="memberinsert" parameterType = "memberdto">
+		INSERT INTO MEMBER 
+		VALUES(#{member_id},#{member_pw},#{member_name},#{member_phone},#{member_email},#{member_gender},#{member_birth},'USER','Y','여행스타일')
+	</insert>
+	
+	<select id="login" resultMap="dtoMap" parameterType="map">
+		SELECT * FROM MEMBER WHERE MEMBER_ID = #{member_id} AND MEMBER_PW = #{member_pw}
+	</select>
+	
+	<update id="infoUpdate"  parameterType="memberdto">
+		UPDATE MEMBER SET MEMBER_PW = #{member_pw}, MEMBER_EMAIL = #{member_email} WHERE MEMBER_ID = #{member_id}
+	</update>
+	
+	<select id="findid" resultMap="dtoMap" parameterType="map">
+		 SELECT * FROM MEMBER WHERE MEMBER_NAME = #{member_name} AND MEMBER_EMAIL = #{member_email}
+	</select>
+	
+	<select id="findpw" resultMap="dtoMap" parameterType="map">
+		 SELECT * FROM MEMBER WHERE MEMBER_NAME = #{member_name} AND MEMBER_ID = #{member_id} AND MEMBER_EMAIL = #{member_email} 
+	</select>
+	
+
+
+</mapper>

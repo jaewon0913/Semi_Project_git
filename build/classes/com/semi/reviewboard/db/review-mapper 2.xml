@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reviewboard">
+
+<select id="selectList" parameterType="map" resultType = "com.semi.reviewboard.dto.reviewBoardDto">
+	SELECT REVIEWBOARD_NO, REVIEWBOARD_GROUPNO, REVIEWBOARD_GROUPSQ, REVIEWBOARD_TITLETAB, REVIEWBOARD_ID, REVIEWBOARD_TITLE, REVIEWBOARD_CONTENT, REVIEWBOARD_REGDATE, REVIEWBOARD_HITS, REVIEWBOARD_CATEGORY
+	FROM ( SELECT ROWNUM RN, REVIEWBOARD_NO, REVIEWBOARD_GROUPNO, REVIEWBOARD_GROUPSQ,REVIEWBOARD_TITLETAB, REVIEWBOARD_ID, REVIEWBOARD_TITLE, REVIEWBOARD_CONTENT, REVIEWBOARD_REGDATE, REVIEWBOARD_HITS, REVIEWBOARD_CATEGORY
+	FROM ( SELECT REVIEWBOARD_NO, REVIEWBOARD_GROUPNO, REVIEWBOARD_GROUPSQ, REVIEWBOARD_TITLETAB, REVIEWBOARD_ID, REVIEWBOARD_TITLE, REVIEWBOARD_CONTENT, REVIEWBOARD_REGDATE, REVIEWBOARD_HITS, REVIEWBOARD_CATEGORY 
+	FROM REVIEWBOARD ORDER BY REVIEWBOARD_GROUPNO DESC, REVIEWBOARD_GROUPSQ))
+ 	WHERE RN >=#{begin} AND RN <![CDATA[ < ]]>=#{end} 
+</select>
+
+<insert id="insert" parameterType="reviewBoardDto" >
+	INSERT INTO REVIEWBOARD VALUES(REVIEWBOARD_NOSEQ.NEXTVAL, REVIEWBOARD_GROPSEQ.NEXTVAL, 1, 0, #{reviewboard_id}, #{reviewboard_title}, #{reviewboard_content}, SYSDATE, 0, #{reviewboard_category})
+</insert> 
+ 
+<select id="selectOne" parameterType="map" resultType="com.semi.reviewboard.dto.reviewBoardDto">
+	SELECT * FROM REVIEWBOARD WHERE REVIEWBOARD_NO=#{reviewboard_no}
+</select>
+
+<update id="hitsUpdate" parameterType="map"  >
+	UPDATE REVIEWBOARD SET REVIEWBOARD_HITS=#{reviewboard_hits} WHERE REVIEWBOARD_NO=#{reviewboard_no}
+</update>
+
+<update id="update" parameterType="reviewBoardDto">
+
+	UPDATE REVIEWBOARD SET REVIEWBOARD_TITLE=#{reviewboard_title}, REVIEWBOARD_CATEGORY=#{reviewboard_category}, 
+	REVIEWBOARD_CONTENT=#{reviewboard_content} WHERE REVIEWBOARD_NO=#{reviewboard_no}
+
+</update>
+
+<insert id="answerinsert" parameterType="reviewBoardDto">
+	INSERT INTO REVIEWBOARD VALUES(REVIEWBOARD_NOSEQ.NEXTVAL,
+	(SELECT REVIEWBOARD_GROUPNO FROM REVIEWBOARD WHERE REVIEWBOARD_NO=#{reviewboard_no} ),
+	(SELECT REVIEWBOARD_GROUPSQ FROM REVIEWBOARD WHERE REVIEWBOARD_NO=#{reviewboard_no})+1,
+	(SELECT REVIEWBOARD_TITLETAB FROM REVIEWBOARD WHERE REVIEWBOARD_NO=#{reviewboard_no})+1,
+	#{reviewboard_id}, #{reviewboard_title}, #{reviewboard_content}, SYSDATE, 0, #{reviewboard_category})
+</insert>
+
+<update id="answerupdate" parameterType="int">
+	UPDATE REVIEWBOARD SET REVIEWBOARD_GROUPSQ = REVIEWBOARD_GROUPSQ+1
+	WHERE REVIEWBOARD_GROUPNO=(SELECT REVIEWBOARD_GROUPNO FROM REVIEWBOARD WHERE REVIEWBOARD_NO=#{reviewboard_no})
+	AND REVIEWBOARD_GROUPSQ &gt; (SELECT REVIEWBOARD_GROUPSQ FROM REVIEWBOARD WHERE REVIEWBOARD_NO=#{reviewboard_no})
+</update>
+
+<delete id="delete" parameterType="int">
+	DELETE FROM REVIEWBOARD WHERE REVIEWBOARD_NO=#{reviewboard_no}
+</delete>
+
+<select id="selectListOption" resultType="com.semi.reviewboard.dto.reviewBoardDto" parameterType="map">
+
+	SELECT *
+		FROM ( SELECT ROWNUM RN, REVIEWBOARD_NO, REVIEWBOARD_GROUPNO, REVIEWBOARD_GROUPSQ,REVIEWBOARD_TITLETAB, REVIEWBOARD_ID, REVIEWBOARD_TITLE, REVIEWBOARD_CONTENT, REVIEWBOARD_REGDATE, REVIEWBOARD_HITS, REVIEWBOARD_CATEGORY
+			FROM ( SELECT *	FROM REVIEWBOARD 
+ 	
+    <if test="title!=null">    
+    WHERE REVIEWBOARD_TITLE LIKE '%'|| #{title} ||'%' 
+    ORDER BY REVIEWBOARD_GROUPNO DESC, REVIEWBOARD_GROUPSQ))
+ 	WHERE RN &gt;=#{begin} AND RN &lt;=#{end}       
+    </if>    
+    <if test="writer!=null">    
+    WHERE REVIEWBOARD_ID LIKE '%'|| #{writer} ||'%'   
+    ORDER BY REVIEWBOARD_GROUPNO DESC, REVIEWBOARD_GROUPSQ))
+ 	WHERE RN &gt;=#{begin} AND RN &lt;=#{end} 
+    </if>
+    <if test="content!=null">    
+    WHERE REVIEWBOARD_CONTENT LIKE '%'|| #{content} ||'%' 
+    ORDER BY REVIEWBOARD_GROUPNO DESC, REVIEWBOARD_GROUPSQ))
+ 	WHERE RN &gt;=#{begin} AND RN &lt;=#{end}     
+    </if>    
+    <if test="location!=null">    
+    WHERE REVIEWBOARD_CATEGORY=#{location}
+    ORDER BY REVIEWBOARD_GROUPNO DESC, REVIEWBOARD_GROUPSQ))
+ 	WHERE RN &gt;=#{begin} AND RN &lt;=#{end}    
+    </if>
+</select>
+
+<select id="selectListOptionTNC" resultType="com.semi.reviewboard.dto.reviewBoardDto" parameterType="map">
+	SELECT *
+		FROM ( SELECT ROWNUM RN, REVIEWBOARD_NO, REVIEWBOARD_GROUPNO, REVIEWBOARD_GROUPSQ,REVIEWBOARD_TITLETAB, REVIEWBOARD_ID, REVIEWBOARD_TITLE, REVIEWBOARD_CONTENT, REVIEWBOARD_REGDATE, REVIEWBOARD_HITS, REVIEWBOARD_CATEGORY
+			FROM ( SELECT *	FROM REVIEWBOARD WHERE REVIEWBOARD_TITLE LIKE '%'|| #{title} ||'%' OR REVIEWBOARD_CONTENT LIKE '%'|| #{content} ||'%' 
+	ORDER BY REVIEWBOARD_GROUPNO DESC, REVIEWBOARD_GROUPSQ))
+ 	WHERE RN &gt;=#{begin} AND RN &lt;=#{end}  	
+</select>
+
+<select id="selectListOptionTNCNL" resultType="com.semi.reviewboard.dto.reviewBoardDto" parameterType="map">
+	SELECT *
+		FROM ( SELECT ROWNUM RN, REVIEWBOARD_NO, REVIEWBOARD_GROUPNO, REVIEWBOARD_GROUPSQ,REVIEWBOARD_TITLETAB, REVIEWBOARD_ID, REVIEWBOARD_TITLE, REVIEWBOARD_CONTENT, REVIEWBOARD_REGDATE, REVIEWBOARD_HITS, REVIEWBOARD_CATEGORY
+			FROM ( SELECT *	FROM REVIEWBOARD WHERE REVIEWBOARD_TITLE LIKE '%'|| #{title} ||'%' OR REVIEWBOARD_CONTENT LIKE '%'|| #{content} ||'%'
+					AND REVIEWBOARD_CATEGORY=#{location} 
+	ORDER BY REVIEWBOARD_GROUPNO DESC, REVIEWBOARD_GROUPSQ))
+ 	WHERE RN &gt;=#{begin} AND RN &lt;=#{end} 
+</select>
+
+ <select id="selectCount" resultType="int" >
+   SELECT COUNT(*) AS CNT FROM REVIEWBOARD
+ </select> 
+ 
+ <select id="selectCountSe" resultType="int" parameterType="map">
+  SELECT COUNT(*) AS CNT FROM REVIEWBOARD  
+  <if test="title!=null">  
+  WHERE REVIEWBOARD_TITLE LIKE '%'|| #{title} ||'%' 
+  </if>
+  <if test="content!=null">  
+  WHERE REVIEWBOARD_CONTENT LIKE '%'|| #{content} ||'%'  
+  </if>
+  <if test="location!=null">  
+  WHERE REVIEWBOARD_CATEGORY=#{location}  
+  </if>
+  <if test="writer!=null">  
+  WHERE REVIEWBOARD_ID LIKE '%'|| #{writer} ||'%'  
+  </if>
+ </select>
+
+<select id="selectCountTNC" resultType="int" parameterType="map" >
+SELECT COUNT(*) AS CNT FROM REVIEWBOARD 
+WHERE REVIEWBOARD_TITLE LIKE '%'|| #{title} ||'%' OR REVIEWBOARD_CONTENT LIKE '%'|| #{content} ||'%'
+</select>
+
+<select id="selectCountTNCNL" resultType="int" parameterType="map">
+SELECT COUNT(*) AS CNT FROM REVIEWBOARD 
+WHERE REVIEWBOARD_TITLE LIKE '%'|| #{title} ||'%' OR REVIEWBOARD_CONTENT LIKE '%'|| #{content} ||'%'
+AND REVIEWBOARD_CATEGORY=#{location} 
+</select>
+
+<insert id="commentAdd" parameterType="com.semi.reviewboard.dto.commentDto">
+INSERT INTO COMMENTBOARD VALUES(COMMENTSEQ.NEXTVAL, #{commentboard_boardno}, #{commentboard_id}, #{commentboard_content}, SYSDATE, 'N' )
+</insert>
+
+<select id="commentList" resultType="com.semi.reviewboard.dto.commentDto" parameterType="int">
+SELECT * FROM COMMENTBOARD WHERE COMMENTBOARD_BOARDNO=#{commentboard_boardno} ORDER BY COMMENTBOARD_NO
+</select>
+
+<select id="commentCNT" resultType="int" parameterType="int">
+SELECT COUNT(*) AS CNT FROM COMMENTBOARD WHERE COMMENTBOARD_BOARDNO=#{commentboard_boardno} ORDER BY COMMENTBOARD_NO
+</select>
+
+<select id="reviewdata" resultType = "com.semi.reviewboard.dto.reviewBoardDto">
+	SELECT * FROM (SELECT * FROM REVIEWBOARD ORDER BY REVIEWBOARD_HITS DESC) 
+	<![CDATA[WHERE ROWNUM <= 3]]>
+</select>
+
+</mapper>
